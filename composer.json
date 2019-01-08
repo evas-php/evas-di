@@ -1,0 +1,13 @@
+{
+    "name": "evas-php/evas-di",
+    "description": "Dependency Injection container based on magic methods",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "evasyakin",
+            "email": "e.vasyakin@itevas.ru"
+        }
+    ],
+    "require": {}
+}
