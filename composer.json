@@ -2,6 +2,7 @@
     "name": "evas-php/evas-di",
     "description": "Dependency Injection container based on magic methods",
     "version": "1.0",
+    "minimum-stability": "dev",
     "type": "library",
     "license": "MIT",
     "authors": [
