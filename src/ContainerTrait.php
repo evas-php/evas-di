@@ -52,7 +52,7 @@ trait ContainerTrait
     public function __call(string $name, array $arguments = [])
     {
         if (isset($this->$name)) {
-            call_user_func_array($this->$name, $arguments);
+            return call_user_func_array($this->$name, $arguments);
         }
     }
 }
