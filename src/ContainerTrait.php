@@ -9,6 +9,7 @@ use \Exception;
 /**
 * Di-контейнер трейт.
 * @author Egor Vasyakin <e.vasyakin@itevas.ru>
+* @since 1.0
 */
 trait ContainerTrait
 {
