@@ -16,9 +16,10 @@ trait ContainerTrait
     // методы
 
     /**
-     * Установка параметра в контейнер.
+     * Установка параметра или параметров контейнера.
      * @param string|array|object имя параметра или массив/объект параметров
      * @param mixed|null значение параметра или null
+     * @return self
      */
     public function set($name, $value = null)
     {
@@ -30,11 +31,13 @@ trait ContainerTrait
                 $this->set($subname, $value);
             }
         }
+        return $this;
     }
 
     /**
-     * Удаление параметра из контейнера.
+     * Удаление параметра или параметров контейнера.
      * @param string|array имя параметра или массив имен параметров
+     * @return self
      */
     public function unset($name)
     {
@@ -46,6 +49,7 @@ trait ContainerTrait
                 unset($this->$subname);
             }
         }
+        return $this;
     }
 
     /**
@@ -70,10 +74,11 @@ trait ContainerTrait
     }
 
     /**
-     * Получение параметра или массива параметров из контейнера.
+     * Получение параметра или массива параметров контейнера.
      * @param string|array|object имя параметра 
      *                            или массив имен параметров 
      *                            или объект имен со значениями по умолчанию
+     * @param mixed|null значение по умолчанию
      * @return mixed|array of mixed
      */
     public function get($name, $default = null)
