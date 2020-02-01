@@ -1,14 +1,14 @@
 {
     "name": "evas-php/evas-di",
-    "description": "Dependency Injection container based on magic methods",
+    "description": "Di module (Dependency Injection container trait & class) based on magic methods",
     "version": "1.0",
     "minimum-stability": "dev",
     "type": "library",
-    "license": "MIT",
+    "license": "CC BY 4.0",
     "authors": [
         {
-            "name": "evasyakin",
-            "email": "e.vasyakin@itevas.ru"
+            "name": "Egor Vasyakin",
+            "email": "egor@evas-php.com"
         }
     ],
     "require": {}
