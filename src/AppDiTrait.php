@@ -53,7 +53,7 @@ trait AppDiTrait
             $di = new $diClass;
             static::instanceSet('di', $di);
         }
-        return static::instanceGet('router');
+        return static::instanceGet('di');
     }
 
     /**
