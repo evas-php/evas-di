@@ -21,21 +21,44 @@ trait AppDiTrait
     /**
      * @var string класс Di-контейнера
      */
-    protected $diClass = EVAS_DI_CLASS;
+    protected static $diClass = EVAS_DI_CLASS;
 
     /**
      * @var Container Di-контейнер приложения
      */
-    protected $di;
+    protected static $di;
 
     /**
      * Установка имени класса Di-контейнера.
      * @param string
      * @return self
      */
-    public static function setDiClass(string $diClass)
+    public static function setDiClass(string $diClass): object
     {
-        return static::instanceSet('diClass', $diClass);
+        static::$diClass = $diClass;
+        return static::instance();
+    }
+
+    /**
+     * Установка di-контейнера.
+     * @param Container
+     * @return self
+     */
+    public static function setDi(Container $di): object
+    {
+        static::$di = $di;
+        return static::instance();
+    }
+
+    /**
+     * Инициализация di-контейнера.
+     * @param array|null параметры di-контейнера
+     * @return Container
+     */
+    public static function initDi(array $vars = null): Container
+    {
+        static::$di = new static::$diClass($vars);
+        return static::$di;
     }
 
     /**
@@ -45,36 +68,32 @@ trait AppDiTrait
      */
     public static function di(Container $di = null): Container
     {
-        if (null !== $di) {
-            static::instanceSet('di', $di);
-        }
-        if (!static::instanceHas('di')) {
-            $diClass = static::instanceGet('diClass');
-            $di = new $diClass;
-            static::instanceSet('di', $di);
-        }
-        return static::instanceGet('di');
+        if (null !== $di) static::setDi($di); 
+        if (null === static::$di) static::initDi();
+        return static::$di;
     }
 
     /**
      * Установка параметра или параметров контейнера.
      * @param string|array|object имя параметра или массив/объект параметров
      * @param mixed|null значение параметра или null
-     * @return Container
+     * @return self
      */
     public static function set($name, $value = null)
     {
-        return static::di()->set($name, $value);
+        static::di()->set($name, $value);
+        return static::instance();
     }
 
     /**
      * Удаление параметра или параметров контейнера.
      * @param string|array имя параметра или массив имен параметров
-     * @return Container
+     * @return self
      */
     public static function unset($name)
     {
-        return static::di()->unset($name);
+        static::di()->unset($name);
+        return static::instance();
     }
 
     /**
