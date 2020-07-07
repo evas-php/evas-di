@@ -116,6 +116,10 @@ trait ContainerTrait
 
     // магия
 
+    /**
+     * Конструктор.
+     * @var array|null своства
+     */
     public function __construct(array $vars = null)
     {
         if ($vars) {
@@ -123,6 +127,11 @@ trait ContainerTrait
         }
     }
 
+    /**
+     * Магическая установка свойства.
+     * @param string имя свойства
+     * @param mixed значение
+     */
     public function __set(string $name, $value)
     {
         if (is_callable($value)) {
@@ -131,11 +140,21 @@ trait ContainerTrait
         $this->$name = $value;
     }
 
+    /**
+     * Магическое получение свойства.
+     * @param string имя свойства
+     * @return null
+     */
     public function __get(string $name)
     {
         return null;
     }
 
+    /**
+     * Магический вызов свойства, являющегося анонимной функцией.
+     * @param string имя свойства
+     * @param array|null аргументы
+     */
     public function __call(string $name, array $arguments = [])
     {
         $var = $this->$name;
