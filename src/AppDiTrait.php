@@ -1,6 +1,6 @@
 <?php
 /**
- * @package evas-php/evas-di
+ * @package evas-php\evas-di
  */
 namespace Evas\Di;
 
