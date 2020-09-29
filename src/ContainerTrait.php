@@ -109,7 +109,7 @@ trait ContainerTrait
      */
     public function call(string $name, array $arguments = [])
     {
-        $var = $this->__call($name, $arguments);
+        return $this->__call($name, $arguments);
     }
 
 
