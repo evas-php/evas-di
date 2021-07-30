@@ -7,9 +7,9 @@
 namespace Evas\Di\Definitions;
 
 use \InvalidArgumentException;
+use Evas\Base\App;
 use Evas\Base\Help\PhpHelp;
 use Evas\Base\Exceptions\FileNotFoundException;
-use Evas\Base\Traits\IncludeTrait;
 use Evas\Di\Container;
 use Evas\Di\Definitions\DefinitionInterface;
 use Evas\Di\Definitions\Traits\ResolveSubDefinitionTrait;
@@ -17,10 +17,8 @@ use Evas\Di\Definitions\Traits\ResolveSubDefinitionTrait;
 class IncludeFile implements DefinitionInterface
 {
     /**
-     * Подключаем трейт загрузки файлов. 
      * Подключаем трейт разрешения вложенных определений.
      */
-    use IncludeTrait;
     use ResolveSubDefinitionTrait;
 
     /** @var string|DefinitionInterface имя файла или определение */
@@ -91,7 +89,7 @@ class IncludeFile implements DefinitionInterface
             $fileargs[] = $this->resolveOrOriginal($value, $c);
         }
         $context = $this->resolveOrOriginal($this->context, $c);
-        return $this->include($filename, $fileargs, $context);
+        return App::include($filename, $fileargs, $context);
     }
 
     /**
@@ -124,6 +122,6 @@ class IncludeFile implements DefinitionInterface
     public function canResolve(Container &$c): bool
     {
         $filename = $this->resolveFilename($c);
-        return $this->canInclude($filename);
+        return App::canInclude($filename);
     }
 }
