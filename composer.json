@@ -2,7 +2,7 @@
     "name": "evas-php/evas-di",
     "description": "Di module (Dependency Injection container trait & class) based on magic methods",
     "keywords": ["dependency injection", "evas-php"],
-    "version": "1.0",
+    "version": "1.1",
     "type": "library",
     "license": "CC-BY-4.0",
     "authors": [
