@@ -14,13 +14,13 @@ use Evas\Di\Definitions\IncludeFile;
 use Evas\Di\Definitions\Reference;
 
 if (! function_exists('create')) {
-    function create(string $className, array $args = null) {
-        return new CreateObject($className, $args);
+    function create(string $className, array $args = null, callable $callback = null) {
+        return new CreateObject($className, $args, $callback);
     }
 }
 if (! function_exists('createOnce')) {
-    function createOnce(string $className, array $args = null) {
-        return (new CreateObject($className, $args))->once();
+    function createOnce(string $className, array $args = null, callable $callback = null) {
+        return (new CreateObject($className, $args, $callback))->once();
     }
 }
 if (! function_exists('includeFile')) {
