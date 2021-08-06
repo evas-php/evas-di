@@ -22,6 +22,8 @@ class CreateObject implements DefinitionInterface
     public $className;
     /** @var array аргументы конструктора */
     public $constructorArgs;
+    /** @var callable колбек после инициализации */
+    protected $callback;
     /** @var bool в единственном ли экземпляре */
     public $once = false;
     /** @var object|null экзепляр, если нужно единственный */
@@ -33,9 +35,9 @@ class CreateObject implements DefinitionInterface
      * Конструктор.
      * @param string|DefinitionInterface имя класса
      * @param array|null аргументы конструктора
-     * @param bool|null в единственном экземпляре
+     * @param callable|null колбек для вызова после инициализации объекта
      */
-    public function __construct($className, array $args = null, bool $once = false)
+    public function __construct($className, array $args = null, callable $callback = null)
     {
         if (!is_string($className) && !($className instanceof DefinitionInterface)) {
             $def = DefinitionInterface::class;
@@ -44,7 +46,7 @@ class CreateObject implements DefinitionInterface
         }
         $this->className = $className;
         $this->constructorArgs = $args ?? [];
-        $this->once = $once;
+        $this->callback = $callback;
     }
 
     /**
@@ -71,6 +73,17 @@ class CreateObject implements DefinitionInterface
     }
 
     /**
+     * Установка колбека после инициализации.
+     * @param callable коллбек
+     * @return self
+     */
+    public function callback(callable $callback): CreateObject
+    {
+        $this->callback = &$callback;
+        return $this;
+    }
+
+    /**
      * Разрешение имени класса.
      * @param Container di контейнер
      * @return string имя класса
@@ -81,21 +94,34 @@ class CreateObject implements DefinitionInterface
     }
 
     /**
+     * Разрешение коллбека после инициализации.
+     * @param Container di контейнер
+     * @return callable|null коллбек
+     */
+    public function resolveCallback(Container &$c): ?callable
+    {
+        return $this->resolveOrOriginal($this->callback, $c);
+    }
+
+    /**
      * Создание экземпляра объекта.
      * @param Container di контейнер
      * @param string имя класса
      * @return object экземпляр объекта
      */
-    protected function createInstance(Container &$c, string $className): object
+    protected function createInstance(Container &$c): object
     {
         $constructorArgs = [];
         if ($this->constructorArgs) foreach ($this->constructorArgs as $name => &$value) {
             $constructorArgs[$name] = $this->resolveOrOriginal($value, $c);
         }
-        $object = new $this->className(...$constructorArgs);
+        $className = $this->resolveClassName($c);
+        $object = new $className(...$constructorArgs);
         // if (!empty($this->properties)) foreach ($this->properties as $name => &$value) {
         //     $object->$name = $this->resolveOrOriginal($value, $c);
         // }
+        $callback = $this->resolveCallback($c);
+        if ($callback) $callback($object);
         return $object;
     }
 
@@ -108,17 +134,17 @@ class CreateObject implements DefinitionInterface
      */
     public function resolve(Container &$c)
     {
-        $className = $this->resolveClassName($c);
         if (false === $this->canResolve($c)) {
+            $className = $this->resolveClassName($c);
             throw new DiException("Class \"$className\" not found");
         }
         if (true === $this->once) {
             if (empty($this->onceInstance)) {
-                $this->onceInstance = $this->createInstance($c, $className);
+                $this->onceInstance = $this->createInstance($c);
             }
             return $this->onceInstance;
         } else {
-            return $this->createInstance($c, $className);
+            return $this->createInstance($c);
         }
     }
 
