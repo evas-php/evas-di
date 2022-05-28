@@ -127,13 +127,14 @@ class Container
     /**
      * Возврат оригинального значения или решения, если это определение.
      * @param string имя свойства
-     * @param mixed значение
+     * @param mixed|null значение
      * @return mixed оригинальное или решённое значение
      * @throws DiException
      */
-    protected function resolveOrOriginal(string $name, $value)
+    protected function resolveOrOriginal(string $name, $value = null)
     {
         try {
+            if (func_num_args() < 2) $value = $this->getOriginal($name); 
             return $value instanceof DefinitionInterface
             ? $value->resolve($this) : $value;
         } catch (\Exception $e) {
@@ -171,8 +172,7 @@ class Container
             return null;
             // throw new DiException("Not found entry for \"$name\"");
         }
-        $value = $this->getOriginal($name);
-        return $this->resolveOrOriginal($name, $value);
+        return $this->resolveOrOriginal($name);
     }
 
     /**
@@ -182,7 +182,7 @@ class Container
      */
     public function isCallable(string $name): bool
     {
-        return $this->getOriginal($name) instanceof \Closure;
+        return is_callable($this->resolveOrOriginal($name));
     }
 
     /**
@@ -195,7 +195,7 @@ class Container
     public function call(string $name, array $args = null)
     {
         $value = $this->get($name);
-        if ($value instanceof \Closure) {
+        if (is_callable($value)) {
             return call_user_func_array($value, $args ?? []);
         }
         throw new DiException("Entry \"$name\" is not Closure");
