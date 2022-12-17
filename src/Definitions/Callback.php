@@ -34,7 +34,7 @@ class Callback implements DefinitionInterface
     public function resolve(Container &$c)
     {
         $callback = $this->callback;
-        return $callback->call($c);
+        return $callback($c);
     }
 
     /**
